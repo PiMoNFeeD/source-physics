@@ -1175,6 +1175,10 @@ void IVP_Contact_Point::recompute_friction() {
 	env->sim_unit_mem->end_memory_transaction();
 }
 
+void IVP_Contact_Point::get_contact_normal(IVP_U_Float_Point* normal) {
+	normal->set( last_contact_normal[0], last_contact_normal[1], last_contact_point_ws.hesse_val );
+}
+
 void IVP_Impact_Solver::get_cos_sin_for_impact(IVP_FLOAT friction_val,IVP_FLOAT percent_energy_conservation,IVP_FLOAT *cos_val,IVP_FLOAT *sin_val) {
     IVP_DOUBLE impact_fri_fact=friction_val * (1.0f + IVP_Inline_Math::ivp_sqrtf(percent_energy_conservation));
     IVP_DOUBLE fri_angle = IVP_Inline_Math::atand(impact_fri_fact);  // #+# bitter, kill, 

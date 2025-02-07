@@ -475,6 +475,9 @@ void IVP_Contact_Point::recalc_friction_s_vals(){
 	this->span_friction_s[0] -= delta_velocity_ws.dot_product(&info->span_friction_v[0]) * dt;
 	this->span_friction_s[1] -= delta_velocity_ws.dot_product(&info->span_friction_v[1]) * dt;
     this->last_contact_point_ws.set( &info->contact_point_ws );
+    this->last_contact_normal[0] = info->surf_normal.k[0];
+    this->last_contact_normal[1] = info->surf_normal.k[1];
+    this->last_contact_point_ws.hesse_val = info->surf_normal.k[2];
 	}
 }
 

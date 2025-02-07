@@ -109,7 +109,8 @@ IVP_Contact_Point::IVP_Contact_Point( IVP_Mindist *md)
     slowly_turn_on_keeper = IVP_SLOWLY_TURN_ON_KEEPER;
     l_friction_system=NULL;
     two_friction_values=IVP_FALSE;
-    
+	last_contact_point_ws.set( 0.0f, 0.0f, 0.0f );
+	last_contact_point_ws.hesse_val = 0.0f;
 }
 
 
@@ -665,7 +666,7 @@ void IVP_Friction_System::calc_friction_forces(const IVP_Event_Sim *es) {
 }
 
 IVP_FLOAT IVP_Contact_Point::get_friction_factor() {
-	return span_friction_s[0] * span_friction_s[1];
+	return real_friction_factor;
 }
 
 void IVP_Contact_Point::set_friction_to_neutral(){
@@ -1013,6 +1014,10 @@ IVP_Contact_Point::~IVP_Contact_Point(){
 	contact_situation.compact_edges[0] = get_synapse(0)->edge;
 	contact_situation.compact_edges[1] = get_synapse(1)->edge;
 
+	get_contact_normal( &contact_situation.surf_normal );
+
+	contact_situation.contact_point_ws = last_contact_point_ws;
+
 	event_friction.contact_situation=&contact_situation;
 	
 	event_friction.friction_handle = this;
@@ -1065,7 +1070,7 @@ IVP_FLOAT IVP_Contact_Point_API::get_vert_force(IVP_Contact_Point *friction_hand
 
 
 void IVP_Contact_Point_API::get_surface_normal_ws(IVP_Contact_Point* friction_handle, IVP_U_Float_Point* normal){
-	*normal = friction_handle->tmp_contact_info->surf_normal;
+	friction_handle->get_contact_normal( normal );
 }
 
 void IVP_Friction_Info_For_Core::friction_info_insert_friction_dist(IVP_Contact_Point *dist)

@@ -186,6 +186,7 @@ protected:
     int has_negative_pull_since;   //0 means inactive, n>1 means negative since n-1 PSIs, -n>0 means has positive value since n PSIs
     IVP_Time last_time_of_recalc_friction_s_vals; // move to friction system
     IVP_U_Float_Point last_contact_point_ws;
+    IVP_FLOAT last_contact_normal[2];
 };
 
 class IVP_Contact_Point: public IVP_Contact_Point_Fast {
@@ -262,6 +263,7 @@ public:
     void set_friction_to_neutral();
     void get_material_info(IVP_Material *mtl[2]);
     void recompute_friction();
+    void get_contact_normal(IVP_U_Float_Point* normal);
 };
 
 
