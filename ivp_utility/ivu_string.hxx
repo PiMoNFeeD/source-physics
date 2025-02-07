@@ -16,11 +16,13 @@ public:
 
 };
 
+typedef void (*IVP_PRINT_FUNCTION)(const char* msg);
 
 extern IVP_ERROR_STRING 	p_export_error(const char *templat, ...);
 extern IVP_ERROR_STRING 	p_get_error();
 extern void	p_print_error();
 extern void 	ivp_message(const char *templat, ...);
+extern void		ivp_set_message_print_function(IVP_PRINT_FUNCTION func);
 extern void 	p_error_message();
 extern void 	p_error_message(const char *templat, ...);
 extern char *	p_make_string(const char *templat, ...);

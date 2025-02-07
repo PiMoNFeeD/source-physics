@@ -320,6 +320,23 @@ IVP_ERROR_STRING p_export_error(const char *templat, ...)
     return p_error_buffer;
 }
 
+static void ivu_default_print_function( const char* lpOutputString )
+{
+#ifdef WIN32
+	OutputDebugString( lpOutputString );
+#else
+	printf( "%s", lpOutputString );
+#endif
+}
+
+IVP_PRINT_FUNCTION g_print_function = ivu_default_print_function;
+
+void ivp_set_message_print_function( IVP_PRINT_FUNCTION func )
+{
+	if ( func )
+		g_print_function = func;
+}
+
 void ivp_message(const char *templat, ...)
 {
     // for general error management... z.B. p_error_message()
@@ -337,13 +354,7 @@ void ivp_message(const char *templat, ...)
     vsprintf(buffer, templat,parg);
 #endif
     va_end(parg);
-#ifdef WIN32
-    OutputDebugString(buffer);
-#elif defined(LINUX)
-    printf("%s",buffer);
-#else
-    printf("%s",buffer);
-#endif
+	g_print_function( buffer );
 }
 
 
@@ -352,12 +363,7 @@ IVP_ERROR_STRING p_get_error(){
 }
 
 void p_print_error(){
-#ifdef WIN32
-    OutputDebugString(p_error_buffer);
-#endif
-
-  //char *buf = p_error_buffer;
-  //    fprintf(stdout,"ERROR: %s\n",buf); // @#@ OS linker problems on playstation
+	g_print_function( p_error_buffer );
 }
 
 char *p_read_first_token(FILE *fp){
